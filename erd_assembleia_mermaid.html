@@ -1,0 +1,205 @@
+
+<style>
+#erd svg { width: 100%; height: auto; }
+#erd svg.erDiagram .divider path { stroke-opacity: 0.5; }
+#erd svg.erDiagram .row-rect-odd path,
+#erd svg.erDiagram .row-rect-odd rect,
+#erd svg.erDiagram .row-rect-even path,
+#erd svg.erDiagram .row-rect-even rect { stroke: none !important; }
+</style>
+<div id="erd" style="padding: 1rem 0;"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '13px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+    primaryColor: dark ? '#3C3489' : '#EEEDFE',
+    primaryTextColor: dark ? '#CECBF6' : '#26215C',
+    primaryBorderColor: dark ? '#534AB7' : '#AFA9EC',
+    secondaryColor: dark ? '#085041' : '#E1F5EE',
+    secondaryTextColor: dark ? '#9FE1CB' : '#04342C',
+    secondaryBorderColor: dark ? '#1D9E75' : '#5DCAA5',
+    tertiaryColor: dark ? '#3C3489' : '#EEEDFE',
+    tertiaryTextColor: dark ? '#CECBF6' : '#26215C',
+    tertiaryBorderColor: dark ? '#534AB7' : '#AFA9EC',
+    attributeBackgroundColorOdd: dark ? '#2C2C2A' : '#F1EFE8',
+    attributeBackgroundColorEven: dark ? '#444441' : '#ffffff',
+  },
+});
+
+const diagram = `erDiagram
+  ORGANIZATIONS ||--o{ MEMBERS : "possui"
+  ORGANIZATIONS ||--o{ ASSEMBLIES : "realiza"
+  ASSEMBLIES ||--o{ CONVOCATIONS : "emite"
+  ASSEMBLIES ||--o{ CREDENTIALS : "credencia"
+  ASSEMBLIES ||--o{ AGENDA_ITEMS : "contém"
+  ASSEMBLIES ||--o{ MINUTES : "gera"
+  ASSEMBLIES ||--o{ AUDIT_LOGS : "rastreia"
+  MEMBERS ||--o{ CREDENTIALS : "check-in"
+  MEMBERS ||--o{ PROXIES : "outorga"
+  MEMBERS ||--o{ PROXIES : "recebe"
+  MEMBERS ||--o{ VOTE_RECORDS : "emite"
+  MEMBERS ||--o{ MINUTE_SIGNATURES : "assina"
+  AGENDA_ITEMS ||--o{ VOTES : "registra"
+  AGENDA_ITEMS ||--o{ VOTE_RECORDS : "acumula"
+  VOTES ||--o{ VOTE_RECORDS : "referencia"
+  MINUTES ||--o{ MINUTE_SIGNATURES : "exige"
+  PROXIES ||--o{ VOTE_RECORDS : "autoriza"
+
+  ORGANIZATIONS {
+    uuid id PK
+    string name
+    string type
+    string cnpj
+    string plan
+    timestamp created_at
+  }
+
+  MEMBERS {
+    uuid id PK
+    uuid org_id FK
+    string name
+    string email
+    string cpf
+    string role
+    string status
+    boolean is_defaulter
+    timestamp created_at
+  }
+
+  ASSEMBLIES {
+    uuid id PK
+    uuid org_id FK
+    uuid created_by FK
+    string title
+    string status
+    string mode
+    timestamp scheduled_at
+    timestamp started_at
+    timestamp ended_at
+    int quorum_required
+  }
+
+  CONVOCATIONS {
+    uuid id PK
+    uuid assembly_id FK
+    string channel
+    timestamp sent_at
+    json delivery_status
+  }
+
+  CREDENTIALS {
+    uuid id PK
+    uuid assembly_id FK
+    uuid member_id FK
+    string channel
+    timestamp checked_in_at
+    string ip_address
+    string device_info
+  }
+
+  PROXIES {
+    uuid id PK
+    uuid assembly_id FK
+    uuid grantor_id FK
+    uuid proxy_id FK
+    string document_url
+    timestamp registered_at
+    boolean is_active
+  }
+
+  AGENDA_ITEMS {
+    uuid id PK
+    uuid assembly_id FK
+    int order_index
+    string title
+    string quorum_type
+    string vote_mode
+    string status
+  }
+
+  VOTES {
+    uuid id PK
+    uuid agenda_item_id FK
+    string label
+    int total_count
+  }
+
+  VOTE_RECORDS {
+    uuid id PK
+    uuid agenda_item_id FK
+    uuid member_id FK
+    uuid vote_id FK
+    uuid proxy_id FK
+    string channel
+    string ip_address
+    timestamp voted_at
+    string integrity_hash
+  }
+
+  MINUTES {
+    uuid id PK
+    uuid assembly_id FK
+    text content
+    string status
+    timestamp generated_at
+    timestamp approved_at
+    string document_url
+  }
+
+  MINUTE_SIGNATURES {
+    uuid id PK
+    uuid minutes_id FK
+    uuid member_id FK
+    string role
+    timestamp signed_at
+    string signature_token
+  }
+
+  AUDIT_LOGS {
+    uuid id PK
+    uuid assembly_id FK
+    uuid actor_id FK
+    string action
+    jsonb payload
+    string ip_address
+    timestamp occurred_at
+  }
+`;
+
+const { svg } = await mermaid.render('erd-main', diagram);
+document.getElementById('erd').innerHTML = svg;
+
+document.querySelectorAll('#erd svg .node').forEach(node => {
+  const firstPath = node.querySelector('path[d]');
+  if (!firstPath) return;
+  const d = firstPath.getAttribute('d');
+  const nums = d.match(/-?[\d.]+/g)?.map(Number);
+  if (!nums || nums.length < 8) return;
+  const xs = [nums[0], nums[2], nums[4], nums[6]];
+  const ys = [nums[1], nums[3], nums[5], nums[7]];
+  const x = Math.min(...xs), y = Math.min(...ys);
+  const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
+  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  rect.setAttribute('x', x); rect.setAttribute('y', y);
+  rect.setAttribute('width', w); rect.setAttribute('height', h);
+  rect.setAttribute('rx', '8');
+  for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
+    if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
+  }
+  firstPath.replaceWith(rect);
+});
+
+document.querySelectorAll('#erd svg.erDiagram .row-rect-odd path, #erd svg.erDiagram .row-rect-even path').forEach(p => {
+  p.setAttribute('stroke', 'none');
+});
+</script>
