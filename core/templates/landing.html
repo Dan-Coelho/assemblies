@@ -1,0 +1,74 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Matic Votes - Sistema de Gestão de Assembleias{% endblock %}
+
+{% block subtitle %}Gestão profissional e transparente de assembleias{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="text-center space-y-6">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white leading-tight">
+            Democratize suas<br>
+            <span class="bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">
+                assembleias
+            </span>
+        </h2>
+        
+        <p class="text-gray-300 text-base sm:text-lg max-w-md mx-auto">
+            Solução completa para gestão de assembleias, votações e atas digitais com total transparência e segurança.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <a href="{% url 'register' %}" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-lg shadow-lg shadow-indigo-500/50 hover:shadow-indigo-500/70 transition-all transform hover:scale-105">
+                Cadastre-se
+            </a>
+            <a href="{% url 'login' %}" class="px-8 py-3 bg-slate-700/50 hover:bg-slate-700 text-white font-semibold rounded-lg border border-slate-600 hover:border-slate-500 transition-all">
+                Fazer Login
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8">
+        <div class="text-center space-y-3 p-6 bg-slate-900/30 rounded-xl border border-slate-700/30 hover:border-indigo-500/30 transition-all">
+            <div class="flex justify-center">
+                <svg class="w-12 h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Votação Digital</h3>
+            <p class="text-sm text-gray-400">Sistema seguro de votação com credenciamento e auditoria completa de todos os votos.</p>
+        </div>
+
+        <div class="text-center space-y-3 p-6 bg-slate-900/30 rounded-xl border border-slate-700/30 hover:border-purple-500/30 transition-all">
+            <div class="flex justify-center">
+                <svg class="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Atas Automáticas</h3>
+            <p class="text-sm text-gray-400">Geração automática de atas com todos os detalhes da assembleia e assinaturas digitais.</p>
+        </div>
+
+        <div class="text-center space-y-3 p-6 bg-slate-900/30 rounded-xl border border-slate-700/30 hover:border-indigo-500/30 transition-all">
+            <div class="flex justify-center">
+                <svg class="w-12 h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-white">100% Seguro</h3>
+            <p class="text-sm text-gray-400">Rastreabilidade completa, logs de auditoria e proteção contra fraudes e duplicação.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer_text %}
+<div class="space-y-2">
+    <p class="text-sm text-gray-400">
+        Já tem uma conta? <a href="{% url 'login' %}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Fazer login</a>
+    </p>
+    <p class="text-xs text-gray-500">
+        Matic Votes © 2026
+    </p>
+</div>
+{% endblock %}

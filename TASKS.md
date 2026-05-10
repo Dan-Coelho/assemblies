@@ -55,12 +55,12 @@
 - [x] 6.4 Adicionar docstring e type hints no backend
 
 #### 7. Templates base
-- [ ] 7.1 Criar pasta `core/templates/`
-- [ ] 7.2 Criar `base.html` com estrutura HTML5, importação do CSS Tailwind e bloco `content`
-- [ ] 7.3 Criar estrutura de sidebar e topbar no `base.html`
-- [ ] 7.4 Aplicar paleta de cores definida no design system (fundo escuro, gradientes)
-- [ ] 7.5 Criar `base_auth.html` para páginas de login/cadastro (layout centralizado)
-- [ ] 7.6 Verificar responsividade do layout base em mobile e desktop
+- [x] 7.1 Criar pasta `core/templates/`
+- [x] 7.2 Criar `base.html` com estrutura HTML5, importação do CSS Tailwind e bloco `content`
+- [x] 7.3 Criar estrutura de sidebar e topbar no `base.html`
+- [x] 7.4 Aplicar paleta de cores definida no design system (fundo escuro, gradientes)
+- [x] 7.5 Criar `base_auth.html` para páginas de login/cadastro (layout centralizado)
+- [x] 7.6 Verificar responsividade do layout base em mobile e desktop
 
 ---
 
@@ -68,14 +68,14 @@
 **Objetivo:** Usuário consegue se cadastrar, fazer login, ver dashboard básico e a landing page pública.
 
 #### 8. Landing page pública
-- [ ] 8.1 Criar view `LandingView` em `core/views.py` como `TemplateView`
-- [ ] 8.2 Criar template `core/templates/landing.html` estendendo `base_auth.html`
-- [ ] 8.3 Implementar seção hero com título, subtítulo e botões "Cadastre-se" e "Login"
-- [ ] 8.4 Aplicar gradiente de fundo e glow decorativo no hero
-- [ ] 8.5 Implementar seção de features (3 cards com ícones SVG e textos)
-- [ ] 8.6 Adicionar rodapé com nome do produto e ano
-- [ ] 8.7 Configurar rota `/` apontando para `LandingView` em `config/urls.py`
-- [ ] 8.8 Verificar responsividade da landing em mobile
+- [x] 8.1 Criar view `LandingView` em `core/views.py` como `TemplateView`
+- [x] 8.2 Criar template `core/templates/landing.html` estendendo `base_auth.html`
+- [x] 8.3 Implementar seção hero com título, subtítulo e botões "Cadastre-se" e "Login"
+- [x] 8.4 Aplicar gradiente de fundo e glow decorativo no hero
+- [x] 8.5 Implementar seção de features (3 cards com ícones SVG e textos)
+- [x] 8.6 Adicionar rodapé com nome do produto e ano
+- [x] 8.7 Configurar rota `/` apontando para `LandingView` em `core/urls.py`
+- [x] 8.8 Verificar responsividade da landing em mobile
 
 #### 9. Cadastro de usuário
 - [ ] 9.1 Criar `core/forms.py` com `UserRegistrationForm` herdando de `UserCreationForm`
