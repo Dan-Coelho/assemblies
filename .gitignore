@@ -8,8 +8,30 @@ wheels/
 
 # Virtual environments
 .venv
-#
-.github
-.environments
+
+# Django
+*.sqlite3
+*.log
+staticfiles/
+media/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# uv
+.uv/
+uv.lock
+
+# dotenv
 .env
-db.sqlite3
+
+# Node
+node_modules/
+
+# Others
+*.bak
+*.swp

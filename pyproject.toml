@@ -8,6 +8,13 @@ dependencies = [
     "django>=6.0.4",
 ]
 
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "single"
 [dependency-groups]
 dev = [
     "ruff>=0.15.12",
