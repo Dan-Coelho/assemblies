@@ -49,10 +49,10 @@
 - [x] 5.5 Adicionar type hints em todos os campos e métodos
 
 #### 6. Autenticação com e-mail
-- [ ] 6.1 Criar arquivo `core/backends.py` com `EmailAuthBackend`
-- [ ] 6.2 Implementar `authenticate()` usando e-mail ao invés de username
-- [ ] 6.3 Adicionar `AUTHENTICATION_BACKENDS` no `settings.py` apontando para o backend
-- [ ] 6.4 Adicionar docstring e type hints no backend
+- [x] 6.1 Criar arquivo `core/backends.py` com `EmailAuthBackend`
+- [x] 6.2 Implementar `authenticate()` usando e-mail ao invés de username
+- [x] 6.3 Adicionar `AUTHENTICATION_BACKENDS` no `settings.py` apontando para o backend
+- [x] 6.4 Adicionar docstring e type hints no backend
 
 #### 7. Templates base
 - [ ] 7.1 Criar pasta `core/templates/`

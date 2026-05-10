@@ -128,6 +128,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 
+# Authentication
+AUTHENTICATION_BACKENDS = [
+    'core.backends.EmailAuthBackend',
+]
+
+
 # Logging
 # https://docs.djangoproject.com/en/6.0/topics/logging/
 
