@@ -42,17 +42,17 @@
 - [x] 4.4 Testar log simples em uma view temporária
 
 #### 5. BaseModel e TenantModel
-- [ ] 5.1 Criar arquivo `core/models.py`
-- [ ] 5.2 Implementar `BaseModel` abstrato com `id` (UUID), `created_at`, `updated_at`
-- [ ] 5.3 Implementar `TenantModel` abstrato herdando de `BaseModel` com FK para `Organization`
-- [ ] 5.4 Adicionar docstrings explicativas em ambas as classes
-- [ ] 5.5 Adicionar type hints em todos os campos e métodos
+- [x] 5.1 Criar arquivo `core/models.py`
+- [x] 5.2 Implementar `BaseModel` abstrato com `id` (UUID), `created_at`, `updated_at`
+- [x] 5.3 Implementar `TenantModel` abstrato herdando de `BaseModel` com FK para `Organization`
+- [x] 5.4 Adicionar docstrings explicativas em ambas as classes
+- [x] 5.5 Adicionar type hints em todos os campos e métodos
 
 #### 6. Autenticação com e-mail
-- [ ] 6.1 Criar arquivo `core/backends.py` com `EmailAuthBackend`
-- [ ] 6.2 Implementar `authenticate()` usando e-mail ao invés de username
-- [ ] 6.3 Adicionar `AUTHENTICATION_BACKENDS` no `settings.py` apontando para o backend
-- [ ] 6.4 Adicionar docstring e type hints no backend
+- [x] 6.1 Criar arquivo `core/backends.py` com `EmailAuthBackend`
+- [x] 6.2 Implementar `authenticate()` usando e-mail ao invés de username
+- [x] 6.3 Adicionar `AUTHENTICATION_BACKENDS` no `settings.py` apontando para o backend
+- [x] 6.4 Adicionar docstring e type hints no backend
 
 #### 7. Templates base
 - [ ] 7.1 Criar pasta `core/templates/`
