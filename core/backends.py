@@ -1,14 +1,14 @@
 from typing import Optional
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.backends import BaseBackend
+from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.http import HttpRequest
 
 User = get_user_model()
 
 
-class EmailAuthBackend(BaseBackend):
+class EmailAuthBackend(ModelBackend):
     """
     Backend de autenticação que usa e-mail ao invés de username.
 
