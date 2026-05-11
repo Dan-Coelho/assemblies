@@ -1,0 +1,92 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Cadastre-se - Matic Votes{% endblock %}
+
+{% block subtitle %}Crie sua conta gratuita{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="text-center">
+        <h2 class="text-2xl font-bold text-slate-100 mb-1">Criar conta</h2>
+        <p class="text-slate-400 text-sm">Preencha os dados abaixo para começar</p>
+    </div>
+
+    <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="flex items-start gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300">
+                <span class="text-red-400 mt-0.5">✕</span>
+                <div>
+                    {% for error in form.non_field_errors %}
+                        <p class="text-sm">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div>
+            <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-slate-300 mb-1.5">
+                {{ form.name.label }}
+            </label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <p class="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                    <span>⚠</span> {{ form.name.errors.0 }}
+                </p>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-slate-300 mb-1.5">
+                {{ form.email.label }}
+            </label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <p class="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                    <span>⚠</span> {{ form.email.errors.0 }}
+                </p>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-slate-300 mb-1.5">
+                {{ form.password1.label }}
+            </label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <p class="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                    <span>⚠</span> {{ form.password1.errors.0 }}
+                </p>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-slate-300 mb-1.5">
+                {{ form.password2.label }}
+            </label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <p class="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                    <span>⚠</span> {{ form.password2.errors.0 }}
+                </p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white font-semibold py-2.5 rounded-lg transition-all duration-200 shadow-lg shadow-violet-500/25 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#1A1A2E]">
+            Criar conta
+        </button>
+
+        <p class="text-xs text-slate-500 text-center">
+            Ao criar uma conta, você concorda com nossos
+            <a href="#" class="text-violet-400 hover:text-violet-300 transition-colors">Termos de Uso</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer_text %}
+<p class="text-sm text-slate-400">
+    Já tem uma conta? <a href="{% url 'login' %}" class="text-violet-400 hover:text-violet-300 font-medium transition-colors">Fazer login</a>
+</p>
+{% endblock %}

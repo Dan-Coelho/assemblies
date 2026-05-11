@@ -7,33 +7,27 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen flex items-center justify-center p-4">
-    <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl"></div>
-    </div>
+<body class="bg-[#0F0F1A] min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-violet-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="relative w-full max-w-md">
+    <div class="relative z-10 w-full max-w-md">
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent mb-2">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent mb-2">
                 Matic Votes
             </h1>
-            <p class="text-gray-400 text-sm">{% block subtitle %}Sistema de Gestão de Assembleias{% endblock %}</p>
+            <p class="text-slate-400 text-sm">{% block subtitle %}Sistema de Gestão de Assembleias{% endblock %}</p>
         </div>
 
-        <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-700/50 p-8 relative">
-            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/10 to-purple-600/10 rounded-2xl"></div>
-            
-            <div class="relative">
-                {% block content %}
-                {% endblock %}
-            </div>
+        <div class="bg-[#1A1A2E] border border-[#2A2A45] rounded-2xl shadow-2xl p-8">
+            {% block content %}
+            {% endblock %}
         </div>
 
         <div class="mt-6 text-center">
-            <p class="text-sm text-gray-400">
+            <p class="text-sm text-slate-400">
                 {% block footer_text %}
-                    Já tem uma conta? <a href="{% url 'login' %}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Fazer login</a>
+                    Já tem uma conta? <a href="{% url 'login' %}" class="text-violet-400 hover:text-violet-300 font-medium transition-colors">Fazer login</a>
                 {% endblock %}
             </p>
         </div>

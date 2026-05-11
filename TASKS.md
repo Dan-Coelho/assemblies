@@ -78,24 +78,24 @@
 - [x] 8.8 Verificar responsividade da landing em mobile
 
 #### 9. Cadastro de usuário
-- [ ] 9.1 Criar `core/forms.py` com `UserRegistrationForm` herdando de `UserCreationForm`
-- [ ] 9.2 Substituir campo `username` por `email` no formulário
-- [ ] 9.3 Adicionar campo `name` (nome completo) ao formulário
-- [ ] 9.4 Criar view `RegisterView` em `core/views.py` como `CreateView`
-- [ ] 9.5 Criar template `core/templates/register.html` com layout de card centralizado
-- [ ] 9.6 Aplicar classes do design system nos inputs e botão
-- [ ] 9.7 Implementar redirecionamento para dashboard após cadastro bem-sucedido
-- [ ] 9.8 Exibir mensagens de validação em português
-- [ ] 9.9 Configurar rota `/cadastro/` em `config/urls.py`
+- [x] 9.1 Criar `core/forms.py` com `UserRegistrationForm` herdando de `UserCreationForm`
+- [x] 9.2 Substituir campo `username` por `email` no formulário
+- [x] 9.3 Adicionar campo `name` (nome completo) ao formulário
+- [x] 9.4 Criar view `RegisterView` em `core/views.py` como `CreateView`
+- [x] 9.5 Criar template `core/templates/register.html` com layout de card centralizado
+- [x] 9.6 Aplicar classes do design system nos inputs e botão
+- [x] 9.7 Implementar redirecionamento para dashboard após cadastro bem-sucedido
+- [x] 9.8 Exibir mensagens de validação em português
+- [x] 9.9 Configurar rota `/cadastro/` em `config/urls.py`
 
 #### 10. Login de usuário
-- [ ] 10.1 Criar view `LoginView` customizada em `core/views.py` herdando de `auth.LoginView`
-- [ ] 10.2 Sobrescrever formulário para usar campo e-mail
-- [ ] 10.3 Criar template `core/templates/login.html` com card centralizado e glow
-- [ ] 10.4 Aplicar classes do design system no formulário
-- [ ] 10.5 Configurar `LOGIN_REDIRECT_URL = '/dashboard/'` no `settings.py`
-- [ ] 10.6 Configurar rota `/login/` em `config/urls.py`
-- [ ] 10.7 Exibir mensagem de erro clara para credenciais inválidas
+- [x] 10.1 Criar view `LoginView` customizada em `core/views.py` herdando de `auth.LoginView`
+- [x] 10.2 Sobrescrever formulário para usar campo e-mail
+- [x] 10.3 Criar template `core/templates/login.html` com card centralizado e glow
+- [x] 10.4 Aplicar classes do design system no formulário
+- [x] 10.5 Configurar `LOGIN_REDIRECT_URL = '/dashboard/'` no `settings.py`
+- [x] 10.6 Configurar rota `/login/` em `config/urls.py`
+- [x] 10.7 Exibir mensagem de erro clara para credenciais inválidas
 
 #### 11. Logout
 - [ ] 11.1 Usar `LogoutView` nativa do Django

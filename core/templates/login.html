@@ -1,0 +1,73 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Login - Matic Votes{% endblock %}
+
+{% block subtitle %}Acesse sua conta{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="text-center">
+        <h2 class="text-2xl font-bold text-slate-100 mb-1">Bem-vindo de volta</h2>
+        <p class="text-slate-400 text-sm">Entre com suas credenciais para continuar</p>
+    </div>
+
+    <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="flex items-start gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300">
+                <span class="text-red-400 mt-0.5">✕</span>
+                <div>
+                    {% for error in form.non_field_errors %}
+                        <p class="text-sm">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div>
+            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-slate-300 mb-1.5">
+                {{ form.username.label }}
+            </label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <p class="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                    <span>⚠</span> {{ form.username.errors.0 }}
+                </p>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-slate-300 mb-1.5">
+                {{ form.password.label }}
+            </label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <p class="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                    <span>⚠</span> {{ form.password.errors.0 }}
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="flex items-center justify-between text-sm">
+            <label class="flex items-center gap-2 text-slate-400 cursor-pointer hover:text-slate-300 transition-colors">
+                <input type="checkbox" name="remember" class="w-4 h-4 bg-[#0F0F1A] border-[#2A2A45] rounded text-violet-600 focus:ring-violet-500 focus:ring-offset-0">
+                <span>Lembrar-me</span>
+            </label>
+            <a href="#" class="text-violet-400 hover:text-violet-300 transition-colors">
+                Esqueceu a senha?
+            </a>
+        </div>
+
+        <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white font-semibold py-2.5 rounded-lg transition-all duration-200 shadow-lg shadow-violet-500/25 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#1A1A2E]">
+            Entrar
+        </button>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer_text %}
+<p class="text-sm text-slate-400">
+    Não tem uma conta? <a href="{% url 'register' %}" class="text-violet-400 hover:text-violet-300 font-medium transition-colors">Cadastre-se</a>
+</p>
+{% endblock %}

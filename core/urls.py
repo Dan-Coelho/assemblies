@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from core.views import LandingView
+from core.views import LandingView, RegisterView, LoginView
 
 urlpatterns = [
     path('', LandingView.as_view(), name='landing'),
+    path('cadastro/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
     path('admin/', admin.site.urls),
 ]
