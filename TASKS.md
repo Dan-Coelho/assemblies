@@ -98,19 +98,19 @@
 - [x] 10.7 Exibir mensagem de erro clara para credenciais inválidas
 
 #### 11. Logout
-- [ ] 11.1 Usar `LogoutView` nativa do Django
-- [ ] 11.2 Configurar `LOGOUT_REDIRECT_URL = '/'` no `settings.py`
-- [ ] 11.3 Adicionar link de logout na topbar do `base.html`
-- [ ] 11.4 Configurar rota `/logout/` em `config/urls.py`
+- [x] 11.1 Usar `LogoutView` nativa do Django
+- [x] 11.2 Configurar `LOGOUT_REDIRECT_URL = '/'` no `settings.py`
+- [x] 11.3 Adicionar link de logout na topbar do `base.html`
+- [x] 11.4 Configurar rota `/logout/` em `config/urls.py`
 
 #### 12. Dashboard principal
-- [ ] 12.1 Criar view `DashboardView` em `core/views.py` como `LoginRequiredMixin` + `TemplateView`
-- [ ] 12.2 Criar template `core/templates/dashboard.html` estendendo `base.html`
-- [ ] 12.3 Implementar grid de 4 cards de métricas (assembleias, membros, etc.)
-- [ ] 12.4 Aplicar classes do design system nos cards
-- [ ] 12.5 Adicionar seção "Próximas assembleias" (placeholder vazio por ora)
-- [ ] 12.6 Configurar rota `/dashboard/` em `config/urls.py`
-- [ ] 12.7 Redirecionar `/` para `/dashboard/` se usuário já estiver logado
+- [x] 12.1 Criar view `DashboardView` em `core/views.py` como `LoginRequiredMixin` + `TemplateView`
+- [x] 12.2 Criar template `core/templates/dashboard.html` estendendo `base.html`
+- [x] 12.3 Implementar grid de 4 cards de métricas (assembleias, membros, etc.)
+- [x] 12.4 Aplicar classes do design system nos cards
+- [x] 12.5 Adicionar seção "Próximas assembleias" (placeholder vazio por ora)
+- [x] 12.6 Configurar rota `/dashboard/` em `config/urls.py`
+- [x] 12.7 Redirecionar `/` para `/dashboard/` se usuário já estiver logado
 
 ---
 
@@ -118,49 +118,49 @@
 **Objetivo:** CRUD completo de organizações e membros funcionando.
 
 #### 13. Model Organization
-- [ ] 13.1 Criar `organizations/models.py` com classe `Organization` herdando de `BaseModel`
-- [ ] 13.2 Adicionar campos: `name`, `type` (TextChoices), `cnpj`, `plan`
-- [ ] 13.3 Definir `OrgType.choices`: condomínio, sindicato, associação
-- [ ] 13.4 Adicionar `__str__`, `Meta`, docstring e type hints
-- [ ] 13.5 Criar e aplicar migrations: `python manage.py makemigrations organizations`
+- [x] 13.1 Criar `organizations/models.py` com classe `Organization` herdando de `BaseModel`
+- [x] 13.2 Adicionar campos: `name`, `type` (TextChoices), `cnpj`, `plan`
+- [x] 13.3 Definir `OrgType.choices`: condomínio, sindicato, associação
+- [x] 13.4 Adicionar `__str__`, `Meta`, docstring e type hints
+- [x] 13.5 Criar e aplicar migrations: `python manage.py makemigrations organizations`
 
 #### 14. Model Member
-- [ ] 14.1 Adicionar classe `Member` em `organizations/models.py` herdando de `TenantModel`
-- [ ] 14.2 Adicionar campos: `user` (FK User opcional), `name`, `email`, `cpf`, `role`, `status`, `is_defaulter`
-- [ ] 14.3 Definir `MemberRole.choices`: síndico/presidente, secretário, conselheiro, membro
-- [ ] 14.4 Definir `MemberStatus.choices`: ativo, inativo, inadimplente
-- [ ] 14.5 Adicionar `__str__`, `Meta`, docstring e type hints
-- [ ] 14.6 Criar e aplicar migrations
+- [x] 14.1 Adicionar classe `Member` em `organizations/models.py` herdando de `TenantModel`
+- [x] 14.2 Adicionar campos: `user` (FK User opcional), `name`, `email`, `cpf`, `role`, `status`, `is_defaulter`
+- [x] 14.3 Definir `MemberRole.choices`: síndico/presidente, secretário, conselheiro, membro
+- [x] 14.4 Definir `MemberStatus.choices`: ativo, inativo, inadimplente
+- [x] 14.5 Adicionar `__str__`, `Meta`, docstring e type hints
+- [x] 14.6 Criar e aplicar migrations
 
 #### 15. CRUD de Organization
-- [ ] 15.1 Criar `organizations/forms.py` com `OrganizationForm`
-- [ ] 15.2 Criar `organizations/views.py` com:
-  - [ ] 15.2.1 `OrganizationListView` (`LoginRequiredMixin` + `ListView`)
-  - [ ] 15.2.2 `OrganizationCreateView` (`LoginRequiredMixin` + `CreateView`)
-  - [ ] 15.2.3 `OrganizationDetailView` (`LoginRequiredMixin` + `DetailView`)
-  - [ ] 15.2.4 `OrganizationUpdateView` (`LoginRequiredMixin` + `UpdateView`)
-- [ ] 15.3 Criar templates em `organizations/templates/organizations/`:
-  - [ ] 15.3.1 `list.html` — tabela com organizações cadastradas
-  - [ ] 15.3.2 `form.html` — formulário de criação/edição com design system
-  - [ ] 15.3.3 `detail.html` — visão detalhada da organização
-- [ ] 15.4 Criar `organizations/urls.py` e registrar em `config/urls.py`
-- [ ] 15.5 Adicionar link "Organizações" na sidebar do `base.html`
+- [x] 15.1 Criar `organizations/forms.py` com `OrganizationForm`
+- [x] 15.2 Criar `organizations/views.py` com:
+  - [x] 15.2.1 `OrganizationListView` (`LoginRequiredMixin` + `ListView`)
+  - [x] 15.2.2 `OrganizationCreateView` (`LoginRequiredMixin` + `CreateView`)
+  - [x] 15.2.3 `OrganizationDetailView` (`LoginRequiredMixin` + `DetailView`)
+  - [x] 15.2.4 `OrganizationUpdateView` (`LoginRequiredMixin` + `UpdateView`)
+- [x] 15.3 Criar templates em `organizations/templates/organizations/`:
+  - [x] 15.3.1 `list.html` — tabela com organizações cadastradas
+  - [x] 15.3.2 `form.html` — formulário de criação/edição com design system
+  - [x] 15.3.3 `detail.html` — visão detalhada da organização
+- [x] 15.4 Criar `organizations/urls.py` e registrar em `config/urls.py`
+- [x] 15.5 Adicionar link "Organizações" na sidebar do `base.html`
 
 #### 16. CRUD de Member
-- [ ] 16.1 Criar `MemberForm` em `organizations/forms.py`
-- [ ] 16.2 Adicionar views em `organizations/views.py`:
-  - [ ] 16.2.1 `MemberListView`
-  - [ ] 16.2.2 `MemberCreateView`
-  - [ ] 16.2.3 `MemberUpdateView`
-- [ ] 16.3 Criar templates:
-  - [ ] 16.3.1 `members/list.html` — tabela com badges de status e papel
-  - [ ] 16.3.2 `members/form.html` — formulário com design system
-- [ ] 16.4 Adicionar rotas de membros em `organizations/urls.py`
-- [ ] 16.5 Adicionar link "Membros" na sidebar
+- [x] 16.1 Criar `MemberForm` em `organizations/forms.py`
+- [x] 16.2 Adicionar views em `organizations/views.py`:
+  - [x] 16.2.1 `MemberListView`
+  - [x] 16.2.2 `MemberCreateView`
+  - [x] 16.2.3 `MemberUpdateView`
+- [x] 16.3 Criar templates:
+  - [x] 16.3.1 `members/list.html` — tabela com badges de status e papel
+  - [x] 16.3.2 `members/form.html` — formulário com design system
+- [x] 16.4 Adicionar rotas de membros em `organizations/urls.py`
+- [x] 16.5 Adicionar link "Membros" na sidebar
 
 #### 17. Atualizar Dashboard com dados reais
-- [ ] 17.1 Injetar contexto com total de organizações e membros na `DashboardView`
-- [ ] 17.2 Exibir contagens nos cards do dashboard
+- [x] 17.1 Injetar contexto com total de organizações e membros na `DashboardView`
+- [x] 17.2 Exibir contagens nos cards do dashboard
 
 ---
 

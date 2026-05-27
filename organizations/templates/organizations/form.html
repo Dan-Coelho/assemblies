@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Editar Organização{% else %}Nova Organização{% endif %} — Matic Votes{% endblock %}
+
+{% block page_title %}{% if object %}Editar Organização{% else %}Nova Organização{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-slate-500">
+        <a href="{% url 'organization_list' %}" class="hover:text-slate-300 transition-colors">Organizações</a>
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <span class="text-slate-300">{% if object %}Editar{% else %}Nova{% endif %}</span>
+    </nav>
+
+    <!-- Card do formulário -->
+    <div class="bg-[#1A1A2E] border border-[#2A2A45] rounded-xl overflow-hidden">
+        <div class="px-6 py-5 border-b border-[#2A2A45]">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-violet-500/20 to-blue-500/20 border border-violet-500/30 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-base font-semibold text-slate-100">
+                        {% if object %}Editar {{ object.name }}{% else %}Nova Organização{% endif %}
+                    </h2>
+                    <p class="text-xs text-slate-500">
+                        {% if object %}Atualize os dados da organização abaixo.{% else %}Preencha os dados para cadastrar uma nova organização.{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" class="p-6 space-y-5">
+            {% csrf_token %}
+
+            <!-- Exibição de erros não-campos -->
+            {% if form.non_field_errors %}
+            <div class="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+                {% for error in form.non_field_errors %}
+                <p class="text-sm text-red-400">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Campo: Nome -->
+            <div class="space-y-1.5">
+                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                    Nome da Organização <span class="text-red-400">*</span>
+                </label>
+                <input type="text"
+                       id="{{ form.name.id_for_label }}"
+                       name="{{ form.name.html_name }}"
+                       value="{{ form.name.value|default:'' }}"
+                       placeholder="Ex: Condomínio Residencial Parque Verde"
+                       class="w-full bg-[#0F0F1A] border {% if form.name.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                {% if form.name.errors %}
+                <p class="text-xs text-red-400">{{ form.name.errors.as_text }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Campo: Tipo -->
+            <div class="space-y-1.5">
+                <label for="{{ form.type.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                    Tipo <span class="text-red-400">*</span>
+                </label>
+                <select id="{{ form.type.id_for_label }}"
+                        name="{{ form.type.html_name }}"
+                        class="w-full bg-[#0F0F1A] border {% if form.type.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm appearance-none cursor-pointer">
+                    {% for value, label in form.type.field.choices %}
+                    <option value="{{ value }}" {% if form.type.value == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.type.errors %}
+                <p class="text-xs text-red-400">{{ form.type.errors.as_text }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Linha: CNPJ e Plano -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <!-- Campo: CNPJ -->
+                <div class="space-y-1.5">
+                    <label for="{{ form.cnpj.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                        CNPJ
+                    </label>
+                    <input type="text"
+                           id="{{ form.cnpj.id_for_label }}"
+                           name="{{ form.cnpj.html_name }}"
+                           value="{{ form.cnpj.value|default:'' }}"
+                           placeholder="00.000.000/0000-00"
+                           class="w-full bg-[#0F0F1A] border {% if form.cnpj.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm font-mono">
+                    {% if form.cnpj.errors %}
+                    <p class="text-xs text-red-400">{{ form.cnpj.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Campo: Plano -->
+                <div class="space-y-1.5">
+                    <label for="{{ form.plan.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                        Plano
+                    </label>
+                    <input type="text"
+                           id="{{ form.plan.id_for_label }}"
+                           name="{{ form.plan.html_name }}"
+                           value="{{ form.plan.value|default:'' }}"
+                           placeholder="Ex: Básico, Pro, Enterprise"
+                           class="w-full bg-[#0F0F1A] border {% if form.plan.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                    {% if form.plan.errors %}
+                    <p class="text-xs text-red-400">{{ form.plan.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Botões de ação -->
+            <div class="flex items-center justify-end gap-3 pt-2 border-t border-[#2A2A45]">
+                <a href="{% url 'organization_list' %}"
+                   class="px-5 py-2.5 rounded-lg border border-[#2A2A45] hover:border-slate-500 text-slate-400 hover:text-slate-200 transition-all text-sm font-medium">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white font-medium px-6 py-2.5 rounded-lg transition-all duration-200 shadow-lg shadow-violet-500/20 text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    {% if object %}Salvar Alterações{% else %}Criar Organização{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
