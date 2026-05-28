@@ -39,7 +39,7 @@
                         Membros
                     </a>
 
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-colors">
+                    <a href="{% url 'assembly_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors {% if request.resolver_match.url_name == 'assembly_list' or request.resolver_match.url_name == 'assembly_create' or request.resolver_match.url_name == 'assembly_detail' or request.resolver_match.url_name == 'assembly_update' %}bg-gradient-to-r from-violet-600/20 to-blue-600/20 border border-violet-500/30 text-violet-300{% else %}text-slate-400 hover:text-slate-200 hover:bg-white/5{% endif %}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>

@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Editar Assembleia{% else %}Nova Assembleia{% endif %} — Matic Votes{% endblock %}
+{% block page_title %}{% if object %}Editar Assembleia{% else %}Nova Assembleia{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-6">
+
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-slate-500">
+        <a href="{% url 'assembly_list' %}" class="hover:text-slate-300 transition-colors">Assembleias</a>
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <span class="text-slate-300">{% if object %}Editar{% else %}Nova{% endif %}</span>
+    </nav>
+
+    <!-- Card do formulário -->
+    <div class="bg-[#1A1A2E] border border-[#2A2A45] rounded-xl overflow-hidden">
+        <div class="px-6 py-5 border-b border-[#2A2A45]">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-violet-500/20 to-blue-500/20 border border-violet-500/30 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-base font-semibold text-slate-100">
+                        {% if object %}Editar: {{ object.title }}{% else %}Nova Assembleia{% endif %}
+                    </h2>
+                    <p class="text-xs text-slate-500">
+                        {% if object %}Atualize os dados da assembleia abaixo.{% else %}Preencha os dados para cadastrar uma nova assembleia.{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" class="p-6 space-y-6">
+            {% csrf_token %}
+
+            <!-- Erros gerais -->
+            {% if form.non_field_errors %}
+            <div class="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+                {% for error in form.non_field_errors %}
+                <p class="text-sm text-red-400">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Seção: Informações básicas -->
+            <div class="space-y-5">
+                <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Informações básicas</h3>
+
+                <!-- Título -->
+                <div class="space-y-1.5">
+                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                        Título <span class="text-red-400">*</span>
+                    </label>
+                    <input type="text"
+                           id="{{ form.title.id_for_label }}"
+                           name="{{ form.title.html_name }}"
+                           value="{{ form.title.value|default:'' }}"
+                           placeholder="Ex: Assembleia Geral Ordinária 2026"
+                           class="w-full bg-[#0F0F1A] border {% if form.title.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                    {% if form.title.errors %}
+                    <p class="text-xs text-red-400">{{ form.title.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Descrição -->
+                <div class="space-y-1.5">
+                    <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                        Descrição
+                    </label>
+                    <textarea id="{{ form.description.id_for_label }}"
+                              name="{{ form.description.html_name }}"
+                              rows="3"
+                              placeholder="Descreva a pauta ou objetivos desta assembleia..."
+                              class="w-full bg-[#0F0F1A] border {% if form.description.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm resize-none">{{ form.description.value|default:'' }}</textarea>
+                    {% if form.description.errors %}
+                    <p class="text-xs text-red-400">{{ form.description.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <hr class="border-[#2A2A45]">
+
+            <!-- Seção: Configurações -->
+            <div class="space-y-5">
+                <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Configurações</h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                    <!-- Status -->
+                    <div class="space-y-1.5">
+                        <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                            Status <span class="text-red-400">*</span>
+                        </label>
+                        <select id="{{ form.status.id_for_label }}"
+                                name="{{ form.status.html_name }}"
+                                class="w-full bg-[#0F0F1A] border {% if form.status.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm appearance-none cursor-pointer">
+                            {% for value, label in form.status.field.choices %}
+                            <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if form.status.errors %}
+                        <p class="text-xs text-red-400">{{ form.status.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Modalidade -->
+                    <div class="space-y-1.5">
+                        <label for="{{ form.mode.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                            Modalidade <span class="text-red-400">*</span>
+                        </label>
+                        <select id="{{ form.mode.id_for_label }}"
+                                name="{{ form.mode.html_name }}"
+                                class="w-full bg-[#0F0F1A] border {% if form.mode.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm appearance-none cursor-pointer">
+                            {% for value, label in form.mode.field.choices %}
+                            <option value="{{ value }}" {% if form.mode.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if form.mode.errors %}
+                        <p class="text-xs text-red-400">{{ form.mode.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Data agendada -->
+                    <div class="space-y-1.5">
+                        <label for="{{ form.scheduled_at.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                            Data e hora agendada <span class="text-red-400">*</span>
+                        </label>
+                        <input type="datetime-local"
+                               id="{{ form.scheduled_at.id_for_label }}"
+                               name="{{ form.scheduled_at.html_name }}"
+                               value="{{ form.scheduled_at.value|default:'' }}"
+                               class="w-full bg-[#0F0F1A] border {% if form.scheduled_at.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                        {% if form.scheduled_at.errors %}
+                        <p class="text-xs text-red-400">{{ form.scheduled_at.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Quórum -->
+                    <div class="space-y-1.5">
+                        <label for="{{ form.quorum_required.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                            Quórum necessário (%) <span class="text-red-400">*</span>
+                        </label>
+                        <input type="number"
+                               id="{{ form.quorum_required.id_for_label }}"
+                               name="{{ form.quorum_required.html_name }}"
+                               value="{{ form.quorum_required.value|default:'50' }}"
+                               min="1" max="100"
+                               class="w-full bg-[#0F0F1A] border {% if form.quorum_required.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                        {% if form.quorum_required.errors %}
+                        <p class="text-xs text-red-400">{{ form.quorum_required.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-[#2A2A45]">
+
+            <!-- Seção: Local / Acesso online -->
+            <div class="space-y-5">
+                <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Local / Acesso online</h3>
+
+                <!-- Local -->
+                <div class="space-y-1.5">
+                    <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                        Local
+                        <span class="text-slate-500 text-xs font-normal ml-1">(obrigatório para presencial/híbrido)</span>
+                    </label>
+                    <input type="text"
+                           id="{{ form.location.id_for_label }}"
+                           name="{{ form.location.html_name }}"
+                           value="{{ form.location.value|default:'' }}"
+                           placeholder="Ex: Salão de Festas — Bloco A"
+                           class="w-full bg-[#0F0F1A] border {% if form.location.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                    {% if form.location.errors %}
+                    <p class="text-xs text-red-400">{{ form.location.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- URL da reunião -->
+                <div class="space-y-1.5">
+                    <label for="{{ form.meeting_url.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                        URL da reunião
+                        <span class="text-slate-500 text-xs font-normal ml-1">(obrigatório para online/híbrido)</span>
+                    </label>
+                    <input type="url"
+                           id="{{ form.meeting_url.id_for_label }}"
+                           name="{{ form.meeting_url.html_name }}"
+                           value="{{ form.meeting_url.value|default:'' }}"
+                           placeholder="https://meet.google.com/..."
+                           class="w-full bg-[#0F0F1A] border {% if form.meeting_url.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                    {% if form.meeting_url.errors %}
+                    <p class="text-xs text-red-400">{{ form.meeting_url.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="flex items-center justify-end gap-3 pt-2 border-t border-[#2A2A45]">
+                <a href="{% url 'assembly_list' %}"
+                   class="px-5 py-2.5 rounded-lg border border-[#2A2A45] hover:border-slate-500 text-slate-400 hover:text-slate-200 transition-all text-sm font-medium">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white font-medium px-6 py-2.5 rounded-lg transition-all duration-200 shadow-lg shadow-violet-500/20 text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    {% if object %}Salvar Alterações{% else %}Criar Assembleia{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

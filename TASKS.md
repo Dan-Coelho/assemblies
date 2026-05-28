@@ -168,70 +168,70 @@
 **Objetivo:** CRUD de assembleias, fluxo de estados e registro de convocações.
 
 #### 18. Model Assembly
-- [ ] 18.1 Criar `assemblies/models.py` com classe `Assembly` herdando de `TenantModel`
-- [ ] 18.2 Implementar `Status.choices` e `Mode.choices` como `TextChoices`
-- [ ] 18.3 Adicionar campos: `title`, `description`, `status`, `mode`, `scheduled_at`, `started_at`, `ended_at`, `quorum_required`, `location`, `meeting_url`
-- [ ] 18.4 Implementar método `clean()` com validações de negócio
-- [ ] 18.5 Implementar properties: `is_open`, `total_credentials`, `quorum_reached`
-- [ ] 18.6 Adicionar docstring, type hints e `__str__`
-- [ ] 18.7 Criar migrations
+- [x] 18.1 Criar `assemblies/models.py` com classe `Assembly` herdando de `TenantModel`
+- [x] 18.2 Implementar `Status.choices` e `Mode.choices` como `TextChoices`
+- [x] 18.3 Adicionar campos: `title`, `description`, `status`, `mode`, `scheduled_at`, `started_at`, `ended_at`, `quorum_required`, `location`, `meeting_url`
+- [x] 18.4 Implementar método `clean()` com validações de negócio
+- [x] 18.5 Implementar properties: `is_open`, `total_credentials`, `quorum_reached`
+- [x] 18.6 Adicionar docstring, type hints e `__str__`
+- [x] 18.7 Criar migrations
 
 #### 19. Model Convocation
-- [ ] 19.1 Adicionar classe `Convocation` em `assemblies/models.py`
-- [ ] 19.2 Implementar `Channel.choices`
-- [ ] 19.3 Adicionar campos: `assembly`, `channel`, `sent_at`, `is_second_call`, `delivery_status`, `notes`
-- [ ] 19.4 Adicionar docstring, type hints e `__str__`
-- [ ] 19.5 Criar migrations
+- [x] 19.1 Adicionar classe `Convocation` em `assemblies/models.py`
+- [x] 19.2 Implementar `Channel.choices`
+- [x] 19.3 Adicionar campos: `assembly`, `channel`, `sent_at`, `is_second_call`, `delivery_status`, `notes`
+- [x] 19.4 Adicionar docstring, type hints e `__str__`
+- [x] 19.5 Criar migrations
 
 #### 20. Model Proxy
-- [ ] 20.1 Adicionar classe `Proxy` em `assemblies/models.py`
-- [ ] 20.2 Adicionar campos e FKs com `related_name` corretos
-- [ ] 20.3 Implementar `clean()`: grantor ≠ proxy_member
-- [ ] 20.4 Adicionar `UniqueConstraint`: um grantor por assembleia
-- [ ] 20.5 Criar migrations
+- [x] 20.1 Adicionar classe `Proxy` em `assemblies/models.py`
+- [x] 20.2 Adicionar campos e FKs com `related_name` corretos
+- [x] 20.3 Implementar `clean()`: grantor ≠ proxy_member
+- [x] 20.4 Adicionar `UniqueConstraint`: um grantor por assembleia
+- [x] 20.5 Criar migrations
 
 #### 21. Model Credential
-- [ ] 21.1 Adicionar classe `Credential` em `assemblies/models.py`
-- [ ] 21.2 Adicionar campos: `assembly`, `member`, `channel`, `checked_in_at`, `ip_address`, `device_info`, `access_token`, `token_used_at`
-- [ ] 21.3 Implementar `clean()`: bloquear inadimplente
-- [ ] 21.4 Adicionar `UniqueConstraint`: um check-in por membro por assembleia
-- [ ] 21.5 Criar migrations
+- [x] 21.1 Adicionar classe `Credential` em `assemblies/models.py`
+- [x] 21.2 Adicionar campos: `assembly`, `member`, `channel`, `checked_in_at`, `ip_address`, `device_info`, `access_token`, `token_used_at`
+- [x] 21.3 Implementar `clean()`: bloquear inadimplente
+- [x] 21.4 Adicionar `UniqueConstraint`: um check-in por membro por assembleia
+- [x] 21.5 Criar migrations
 
 #### 22. CRUD de Assembly
-- [ ] 22.1 Criar `assemblies/forms.py` com `AssemblyForm`
-- [ ] 22.2 Criar `assemblies/views.py` com:
-  - [ ] 22.2.1 `AssemblyListView` com filtro por status
-  - [ ] 22.2.2 `AssemblyCreateView`
-  - [ ] 22.2.3 `AssemblyDetailView`
-  - [ ] 22.2.4 `AssemblyUpdateView`
-- [ ] 22.3 Criar templates:
-  - [ ] 22.3.1 `assemblies/list.html` — tabela com badges de status
-  - [ ] 22.3.2 `assemblies/form.html`
-  - [ ] 22.3.3 `assemblies/detail.html` — visão completa com abas (pauta, credenciados, convocações)
-- [ ] 22.4 Criar `assemblies/urls.py` e registrar em `config/urls.py`
+- [x] 22.1 Criar `assemblies/forms.py` com `AssemblyForm`
+- [x] 22.2 Criar `assemblies/views.py` com:
+  - [x] 22.2.1 `AssemblyListView` com filtro por status
+  - [x] 22.2.2 `AssemblyCreateView`
+  - [x] 22.2.3 `AssemblyDetailView`
+  - [x] 22.2.4 `AssemblyUpdateView`
+- [x] 22.3 Criar templates:
+  - [x] 22.3.1 `assemblies/list.html` — tabela com badges de status
+  - [x] 22.3.2 `assemblies/form.html`
+  - [x] 22.3.3 `assemblies/detail.html` — visão completa com abas (pauta, credenciados, convocações)
+- [x] 22.4 Criar `assemblies/urls.py` e registrar em `config/urls.py`
 
 #### 23. Fluxo de estados da Assembly
-- [ ] 23.1 Criar view `AssemblyStartView` (muda status para `open`)
-- [ ] 23.2 Criar view `AssemblyCloseView` (muda status para `closed`)
-- [ ] 23.3 Adicionar validações: só inicia com status `convoked`, só fecha com status `open`
-- [ ] 23.4 Adicionar botões de ação contextuais no `detail.html` (conforme status atual)
+- [x] 23.1 Criar view `AssemblyStartView` (muda status para `open`)
+- [x] 23.2 Criar view `AssemblyCloseView` (muda status para `closed`)
+- [x] 23.3 Adicionar validações: só inicia com status `convoked`, só fecha com status `open`
+- [x] 23.4 Adicionar botões de ação contextuais no `detail.html` (conforme status atual)
 
 #### 24. Convocações
-- [ ] 24.1 Criar `ConvocationForm` em `assemblies/forms.py`
-- [ ] 24.2 Criar `ConvocationCreateView` em `assemblies/views.py`
-- [ ] 24.3 Template inline no `detail.html` da assembleia (lista + formulário de adição)
-- [ ] 24.4 Registrar rotas em `assemblies/urls.py`
+- [x] 24.1 Criar `ConvocationForm` em `assemblies/forms.py`
+- [x] 24.2 Criar `ConvocationCreateView` em `assemblies/views.py`
+- [x] 24.3 Template inline no `detail.html` da assembleia (lista + formulário de adição)
+- [x] 24.4 Registrar rotas em `assemblies/urls.py`
 
 #### 25. Procurações
-- [ ] 25.1 Criar `ProxyForm`
-- [ ] 25.2 Criar `ProxyCreateView`
-- [ ] 25.3 Template inline na aba de procurações do `detail.html`
+- [x] 25.1 Criar `ProxyForm`
+- [x] 25.2 Criar `ProxyCreateView`
+- [x] 25.3 Template inline na aba de procurações do `detail.html`
 
 #### 26. Credenciamento
-- [ ] 26.1 Criar `CredentialForm`
-- [ ] 26.2 Criar `CredentialCreateView` com validação de inadimplência
-- [ ] 26.3 Exibir contador de credenciados e indicador de quórum no `detail.html`
-- [ ] 26.4 Registrar rotas em `assemblies/urls.py`
+- [x] 26.1 Criar `CredentialForm`
+- [x] 26.2 Criar `CredentialCreateView` com validação de inadimplência
+- [x] 26.3 Exibir contador de credenciados e indicador de quórum no `detail.html`
+- [x] 26.4 Registrar rotas em `assemblies/urls.py`
 
 ---
 

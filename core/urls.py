@@ -27,4 +27,5 @@ urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('admin/', admin.site.urls),
     path('', include('organizations.urls')),
+    path('', include('assemblies.urls')),
 ]

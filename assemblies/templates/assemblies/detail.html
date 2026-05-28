@@ -1,0 +1,675 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ assembly.title }} — Matic Votes{% endblock %}
+{% block page_title %}{{ assembly.title }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Breadcrumb + ações de cabeçalho -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <nav class="flex items-center gap-2 text-sm text-slate-500">
+            <a href="{% url 'assembly_list' %}" class="hover:text-slate-300 transition-colors">Assembleias</a>
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+            <span class="text-slate-300 truncate max-w-[200px]">{{ assembly.title }}</span>
+        </nav>
+
+        <!-- Botões contextuais por status -->
+        <div class="flex items-center gap-2 flex-wrap">
+
+            {% if assembly.status == 'convoked' %}
+            <!-- Iniciar: só disponível quando status = convoked -->
+            <form method="post" action="{% url 'assembly_start' assembly.pk %}"
+                  onsubmit="return confirm('Deseja realmente iniciar esta assembleia agora?')">
+                {% csrf_token %}
+                <button type="submit"
+                        id="btn-iniciar-assembleia"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-medium px-5 py-2 rounded-lg transition-all duration-200 shadow-lg shadow-emerald-500/20 text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Iniciar Assembleia
+                </button>
+            </form>
+            {% endif %}
+
+            {% if assembly.status == 'open' %}
+            <!-- Encerrar: só disponível quando status = open -->
+            <form method="post" action="{% url 'assembly_close' assembly.pk %}"
+                  onsubmit="return confirm('Deseja realmente encerrar esta assembleia? Esta ação não pode ser desfeita.')">
+                {% csrf_token %}
+                <button type="submit"
+                        id="btn-encerrar-assembleia"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-medium px-5 py-2 rounded-lg transition-all duration-200 shadow-lg shadow-red-500/20 text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25zm0 3h.008v3.75H12v-3.75z"/>
+                    </svg>
+                    Encerrar Assembleia
+                </button>
+            </form>
+            {% endif %}
+
+            {% if assembly.status != 'closed' and assembly.status != 'cancelled' %}
+            <a href="{% url 'assembly_update' assembly.pk %}"
+               class="inline-flex items-center gap-2 border border-[#2A2A45] hover:border-violet-500/50 text-slate-300 hover:text-violet-300 px-4 py-2 rounded-lg transition-all text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Editar
+            </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- Mensagens de feedback (sucesso / erro) -->
+    {% if messages %}
+    <div class="space-y-2">
+        {% for message in messages %}
+        <div class="flex items-start gap-3 px-4 py-3 rounded-lg border
+                    {% if message.tags == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-300
+                    {% elif message.tags == 'error' %}bg-red-500/10 border-red-500/30 text-red-300
+                    {% else %}bg-blue-500/10 border-blue-500/30 text-blue-300{% endif %}">
+            {% if message.tags == 'success' %}
+            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {% else %}
+            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {% endif %}
+            <p class="text-sm">{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Card de informações gerais -->
+    <div class="bg-[#1A1A2E] border border-[#2A2A45] rounded-xl p-6">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+            <div class="space-y-3 flex-1">
+                <!-- Status badge -->
+                <div class="flex items-center gap-3 flex-wrap">
+                    {% if assembly.status == 'draft' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-500/15 text-slate-300 border border-slate-500/20">Rascunho</span>
+                    {% elif assembly.status == 'convoked' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/15 text-amber-300 border border-amber-500/20">Convocada</span>
+                    {% elif assembly.status == 'open' %}
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Em andamento
+                        </span>
+                    {% elif assembly.status == 'closed' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/15 text-blue-300 border border-blue-500/20">Encerrada</span>
+                    {% elif assembly.status == 'cancelled' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/15 text-red-300 border border-red-500/20">Cancelada</span>
+                    {% endif %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#2A2A45] text-slate-400 border border-[#3A3A55]">
+                        {{ assembly.get_mode_display }}
+                    </span>
+                </div>
+
+                <!-- Descrição -->
+                {% if assembly.description %}
+                <p class="text-slate-400 text-sm leading-relaxed">{{ assembly.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Metadados em grid -->
+        <div class="mt-5 pt-5 border-t border-[#2A2A45] grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Agendada</p>
+                <p class="text-sm text-slate-200 font-medium">{{ assembly.scheduled_at|date:"d/m/Y" }}</p>
+                <p class="text-xs text-slate-500">{{ assembly.scheduled_at|date:"H:i" }}</p>
+            </div>
+            {% if assembly.started_at %}
+            <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Iniciada</p>
+                <p class="text-sm text-slate-200 font-medium">{{ assembly.started_at|date:"d/m/Y H:i" }}</p>
+            </div>
+            {% endif %}
+            {% if assembly.ended_at %}
+            <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Encerrada</p>
+                <p class="text-sm text-slate-200 font-medium">{{ assembly.ended_at|date:"d/m/Y H:i" }}</p>
+            </div>
+            {% endif %}
+            <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Quórum</p>
+                <p class="text-sm font-medium {% if assembly.quorum_reached %}text-emerald-400{% else %}text-slate-200{% endif %}">
+                    {{ assembly.quorum_required }}%
+                    {% if assembly.quorum_reached %}
+                    <span class="text-xs text-emerald-500">✓ atingido</span>
+                    {% endif %}
+                </p>
+            </div>
+            {% if assembly.location %}
+            <div class="col-span-2">
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Local</p>
+                <p class="text-sm text-slate-300">{{ assembly.location }}</p>
+            </div>
+            {% endif %}
+            {% if assembly.meeting_url %}
+            <div class="col-span-2">
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Link da reunião</p>
+                <a href="{{ assembly.meeting_url }}" target="_blank" rel="noopener noreferrer"
+                   class="text-sm text-violet-400 hover:text-violet-300 transition-colors truncate block">
+                    {{ assembly.meeting_url }}
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Indicador de quórum visual -->
+        <div class="mt-5 pt-5 border-t border-[#2A2A45]">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-500">Credenciados</span>
+                    {% if assembly.quorum_reached %}
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Quórum atingido
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/15 text-amber-300 border border-amber-500/20">
+                        Aguardando quórum
+                    </span>
+                    {% endif %}
+                </div>
+                <span class="text-xs text-slate-400 font-medium">
+                    {{ assembly.total_credentials }} / {{ assembly.quorum_required }}% exigido
+                </span>
+            </div>
+            <div class="h-2 bg-[#2A2A45] rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-500
+                            {% if assembly.quorum_reached %}bg-gradient-to-r from-emerald-500 to-teal-500
+                            {% else %}bg-gradient-to-r from-violet-500 to-blue-500{% endif %}"
+                     style="width: {% if assembly.quorum_reached %}100{% else %}{{ assembly.total_credentials }}{% endif %}%"></div>
+            </div>
+            <div class="flex justify-between mt-1">
+                <span class="text-xs text-slate-600">0</span>
+                <span class="text-xs text-slate-600">{{ assembly.quorum_required }}% mínimo</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Abas -->
+    <div class="bg-[#1A1A2E] border border-[#2A2A45] rounded-xl overflow-hidden">
+
+        <!-- Tab nav -->
+        <div class="flex border-b border-[#2A2A45]">
+            <a href="?tab=pauta"
+               class="px-6 py-4 text-sm font-medium transition-colors border-b-2 {% if active_tab == 'pauta' %}border-violet-500 text-violet-300{% else %}border-transparent text-slate-500 hover:text-slate-300{% endif %}">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    Pauta
+                </span>
+            </a>
+            <a href="?tab=credenciados"
+               class="px-6 py-4 text-sm font-medium transition-colors border-b-2 {% if active_tab == 'credenciados' %}border-violet-500 text-violet-300{% else %}border-transparent text-slate-500 hover:text-slate-300{% endif %}">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Credenciados
+                    {% if assembly.total_credentials %}
+                    <span class="bg-violet-500/20 text-violet-300 text-xs px-1.5 py-0.5 rounded-full">{{ assembly.total_credentials }}</span>
+                    {% endif %}
+                </span>
+            </a>
+            <a href="?tab=convocacoes"
+               class="px-6 py-4 text-sm font-medium transition-colors border-b-2 {% if active_tab == 'convocacoes' %}border-violet-500 text-violet-300{% else %}border-transparent text-slate-500 hover:text-slate-300{% endif %}">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Convocações
+                    {% if convocations %}
+                    <span class="bg-violet-500/20 text-violet-300 text-xs px-1.5 py-0.5 rounded-full">{{ convocations|length }}</span>
+                    {% endif %}
+                </span>
+            </a>
+            <a href="?tab=procuracoes"
+               class="px-6 py-4 text-sm font-medium transition-colors border-b-2 {% if active_tab == 'procuracoes' %}border-violet-500 text-violet-300{% else %}border-transparent text-slate-500 hover:text-slate-300{% endif %}">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Procurações
+                    {% if proxies %}
+                    <span class="bg-violet-500/20 text-violet-300 text-xs px-1.5 py-0.5 rounded-full">{{ proxies|length }}</span>
+                    {% endif %}
+                </span>
+            </a>
+        </div>
+
+        <!-- Tab: Pauta -->
+        {% if active_tab == 'pauta' %}
+        <div class="p-6">
+            <div class="flex flex-col items-center justify-center py-12 text-center">
+                <div class="w-12 h-12 bg-[#2A2A45] rounded-full flex items-center justify-center mb-3">
+                    <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                </div>
+                <p class="text-slate-400 text-sm">Os itens de pauta serão gerenciados aqui.</p>
+                <p class="text-slate-600 text-xs mt-1">Disponível na Sprint 4 — Votação.</p>
+            </div>
+        </div>
+
+        <!-- Tab: Credenciados -->
+        {% elif active_tab == 'credenciados' %}
+        <div class="p-6 space-y-6">
+
+            <!-- Contador e indicador de quórum inline na aba -->
+            <div class="flex items-center justify-between bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-gradient-to-br from-violet-500/20 to-blue-500/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-200">
+                            {{ assembly.total_credentials }} credenciado{{ assembly.total_credentials|pluralize:",s" }}
+                        </p>
+                        <p class="text-xs text-slate-500">Quórum mínimo: {{ assembly.quorum_required }}%</p>
+                    </div>
+                </div>
+                {% if assembly.quorum_reached %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Quórum atingido
+                </span>
+                {% else %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/15 text-amber-300 border border-amber-500/20">
+                    Aguardando quórum
+                </span>
+                {% endif %}
+            </div>
+
+            <!-- Lista de credenciados -->
+            {% if credentials %}
+            <div class="space-y-3">
+                {% for credential in credentials %}
+                <div class="flex items-center justify-between py-3 px-4 bg-[#0F0F1A] rounded-lg border border-[#2A2A45]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-violet-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                            {{ credential.member.name.0|upper }}
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">{{ credential.member.name }}</p>
+                            <p class="text-xs text-slate-500">{{ credential.get_channel_display }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        {% if credential.checked_in_at %}
+                        <p class="text-xs text-emerald-400 font-medium">✓ Check-in realizado</p>
+                        <p class="text-xs text-slate-600">{{ credential.checked_in_at|date:"d/m/Y H:i" }}</p>
+                        {% else %}
+                        <p class="text-xs text-amber-400">Pendente</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+                <div class="w-12 h-12 bg-[#2A2A45] rounded-full flex items-center justify-center mb-3">
+                    <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <p class="text-slate-400 text-sm">Nenhum membro credenciado ainda.</p>
+                <p class="text-slate-600 text-xs mt-1">Use o formulário abaixo para registrar o primeiro check-in.</p>
+            </div>
+            {% endif %}
+
+            <!-- Formulário inline de credenciamento -->
+            <div class="border-t border-[#2A2A45] pt-5">
+                <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
+                    Registrar novo credenciamento
+                </h4>
+                <form method="post" action="{% url 'credential_create' assembly.pk %}" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                        <!-- Membro -->
+                        <div class="space-y-1.5">
+                            <label for="id_cred_member" class="block text-sm font-medium text-slate-300">
+                                Membro <span class="text-red-400">*</span>
+                            </label>
+                            <select id="id_cred_member" name="member"
+                                    class="w-full bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm appearance-none cursor-pointer">
+                                <option value="">Selecione o membro</option>
+                                {% for member in credential_members %}
+                                <option value="{{ member.pk }}">{{ member.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Canal de check-in -->
+                        <div class="space-y-1.5">
+                            <label for="id_cred_channel" class="block text-sm font-medium text-slate-300">
+                                Canal de check-in <span class="text-red-400">*</span>
+                            </label>
+                            <select id="id_cred_channel" name="channel"
+                                    class="w-full bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm appearance-none cursor-pointer">
+                                <option value="email">E-mail</option>
+                                <option value="sms">SMS</option>
+                                <option value="whatsapp">WhatsApp</option>
+                                <option value="postal">Correio</option>
+                                <option value="edital">Edital</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Data/hora do check-in -->
+                    <div class="space-y-1.5">
+                        <label for="id_cred_checked_in_at" class="block text-sm font-medium text-slate-300">
+                            Data/hora do check-in
+                            <span class="text-slate-500 text-xs font-normal">(deixe em branco para usar o horário atual)</span>
+                        </label>
+                        <input type="datetime-local" id="id_cred_checked_in_at" name="checked_in_at"
+                               class="w-full bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                    </div>
+
+                    <!-- Botão de submit -->
+                    <div class="flex justify-end">
+                        <button type="submit"
+                                id="btn-credenciar-membro"
+                                class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-medium px-5 py-2.5 rounded-lg transition-all duration-200 shadow-lg shadow-emerald-500/20 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Credenciar Membro
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Tab: Convocações -->
+        {% elif active_tab == 'convocacoes' %}
+        <div class="p-6 space-y-6">
+
+            <!-- Lista de convocações existentes -->
+            {% if convocations %}
+            <div class="space-y-3">
+                {% for conv in convocations %}
+                <div class="flex items-center justify-between py-3 px-4 bg-[#0F0F1A] rounded-lg border border-[#2A2A45]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-[#2A2A45] rounded-lg flex items-center justify-center">
+                            {% if conv.channel == 'email' %}
+                            <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            {% elif conv.channel == 'whatsapp' %}
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            {% elif conv.channel == 'sms' %}
+                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                            </svg>
+                            {% else %}
+                            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">{{ conv.get_channel_display }}</p>
+                            {% if conv.is_second_call %}
+                            <span class="text-xs text-amber-400 font-medium">2ª Chamada</span>
+                            {% else %}
+                            <span class="text-xs text-slate-500">1ª Chamada</span>
+                            {% endif %}
+                            {% if conv.notes %}
+                            <p class="text-xs text-slate-600 mt-0.5 truncate max-w-[180px]" title="{{ conv.notes }}">{{ conv.notes }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        {% if conv.sent_at %}
+                        <p class="text-xs text-emerald-400 font-medium">✓ Enviada</p>
+                        <p class="text-xs text-slate-600">{{ conv.sent_at|date:"d/m/Y H:i" }}</p>
+                        {% else %}
+                        <p class="text-xs text-slate-500">Não enviada</p>
+                        <p class="text-xs text-slate-600">Registrada em {{ conv.created_at|date:"d/m/Y" }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+                <div class="w-12 h-12 bg-[#2A2A45] rounded-full flex items-center justify-center mb-3">
+                    <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <p class="text-slate-400 text-sm">Nenhuma convocação registrada ainda.</p>
+                <p class="text-slate-600 text-xs mt-1">Use o formulário abaixo para adicionar a primeira convocação.</p>
+            </div>
+            {% endif %}
+
+            <!-- Formulário inline de nova convocação -->
+            <div class="border-t border-[#2A2A45] pt-5">
+                <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
+                    Registrar nova convocação
+                </h4>
+                <form method="post" action="{% url 'convocation_create' assembly.pk %}" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                        <!-- Canal de envio -->
+                        <div class="space-y-1.5">
+                            <label for="id_channel" class="block text-sm font-medium text-slate-300">
+                                Canal de envio <span class="text-red-400">*</span>
+                            </label>
+                            <select id="id_channel" name="channel"
+                                    class="w-full bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm appearance-none cursor-pointer">
+                                <option value="email">E-mail</option>
+                                <option value="sms">SMS</option>
+                                <option value="whatsapp">WhatsApp</option>
+                                <option value="postal">Correio</option>
+                                <option value="edital">Edital</option>
+                            </select>
+                        </div>
+
+                        <!-- Data/hora de envio -->
+                        <div class="space-y-1.5">
+                            <label for="id_sent_at" class="block text-sm font-medium text-slate-300">
+                                Data/hora de envio
+                                <span class="text-slate-500 text-xs font-normal">(opcional)</span>
+                            </label>
+                            <input type="datetime-local" id="id_sent_at" name="sent_at"
+                                   class="w-full bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Segunda convocação (checkbox) -->
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" id="id_is_second_call" name="is_second_call"
+                               class="w-4 h-4 rounded border-[#2A2A45] bg-[#0F0F1A] text-violet-500 focus:ring-violet-500/30 cursor-pointer">
+                        <label for="id_is_second_call" class="text-sm text-slate-300 cursor-pointer">
+                            Esta é uma segunda convocação
+                        </label>
+                    </div>
+
+                    <!-- Observações -->
+                    <div class="space-y-1.5">
+                        <label for="id_notes" class="block text-sm font-medium text-slate-300">
+                            Observações
+                            <span class="text-slate-500 text-xs font-normal">(opcional)</span>
+                        </label>
+                        <textarea id="id_notes" name="notes" rows="2"
+                                  placeholder="Informações adicionais sobre esta convocação..."
+                                  class="w-full bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm resize-none"></textarea>
+                    </div>
+
+                    <!-- Botão de submit -->
+                    <div class="flex justify-end">
+                        <button type="submit"
+                                id="btn-add-convocacao"
+                                class="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white font-medium px-5 py-2.5 rounded-lg transition-all duration-200 shadow-lg shadow-violet-500/20 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Registrar Convocação
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        {% endif %}
+
+        <!-- Tab: Procurações -->
+        {% elif active_tab == 'procuracoes' %}
+        <div class="p-6 space-y-6">
+
+            <!-- Lista de procurações existentes -->
+            {% if proxies %}
+            <div class="space-y-3">
+                {% for proxy in proxies %}
+                <div class="flex items-center justify-between py-3 px-4 bg-[#0F0F1A] rounded-lg border border-[#2A2A45]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-[#2A2A45] rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">
+                                {{ proxy.grantor.name }}
+                                <span class="text-slate-500 mx-1">→</span>
+                                {{ proxy.proxy_member.name }}
+                            </p>
+                            <p class="text-xs text-slate-500">Registrada em {{ proxy.created_at|date:"d/m/Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        {% if proxy.is_active %}
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            Ativa
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-500/15 text-slate-400 border border-slate-500/20">
+                            Revogada
+                        </span>
+                        {% endif %}
+                        {% if proxy.document_url %}
+                        <div class="mt-1">
+                            <a href="{{ proxy.document_url }}" target="_blank" rel="noopener noreferrer"
+                               class="text-xs text-violet-400 hover:text-violet-300 transition-colors">
+                                Ver documento
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+                <div class="w-12 h-12 bg-[#2A2A45] rounded-full flex items-center justify-center mb-3">
+                    <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <p class="text-slate-400 text-sm">Nenhuma procuração registrada ainda.</p>
+                <p class="text-slate-600 text-xs mt-1">Use o formulário abaixo para adicionar a primeira procuração.</p>
+            </div>
+            {% endif %}
+
+            <!-- Formulário inline de nova procuração -->
+            <div class="border-t border-[#2A2A45] pt-5">
+                <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
+                    Registrar nova procuração
+                </h4>
+                <form method="post" action="{% url 'proxy_create' assembly.pk %}" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                        <!-- Outorgante -->
+                        <div class="space-y-1.5">
+                            <label for="id_grantor" class="block text-sm font-medium text-slate-300">
+                                Outorgante <span class="text-red-400">*</span>
+                            </label>
+                            <select id="id_grantor" name="grantor"
+                                    class="w-full bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm appearance-none cursor-pointer">
+                                <option value="">Selecione o outorgante</option>
+                                {% for member in proxy_members %}
+                                <option value="{{ member.pk }}">{{ member.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Procurador -->
+                        <div class="space-y-1.5">
+                            <label for="id_proxy_member" class="block text-sm font-medium text-slate-300">
+                                Procurador <span class="text-red-400">*</span>
+                            </label>
+                            <select id="id_proxy_member" name="proxy_member"
+                                    class="w-full bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm appearance-none cursor-pointer">
+                                <option value="">Selecione o procurador</option>
+                                {% for member in proxy_members %}
+                                <option value="{{ member.pk }}">{{ member.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- URL do documento -->
+                    <div class="space-y-1.5">
+                        <label for="id_document_url" class="block text-sm font-medium text-slate-300">
+                            URL do documento
+                            <span class="text-slate-500 text-xs font-normal">(opcional)</span>
+                        </label>
+                        <input type="url" id="id_document_url" name="document_url"
+                               placeholder="https://..."
+                               class="w-full bg-[#0F0F1A] border border-[#2A2A45] rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm">
+                    </div>
+
+                    <!-- Procuração ativa (checkbox) -->
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" id="id_is_active" name="is_active" checked
+                               class="w-4 h-4 rounded border-[#2A2A45] bg-[#0F0F1A] text-violet-500 focus:ring-violet-500/30 cursor-pointer">
+                        <label for="id_is_active" class="text-sm text-slate-300 cursor-pointer">
+                            Procuração ativa
+                        </label>
+                    </div>
+
+                    <!-- Botão de submit -->
+                    <div class="flex justify-end">
+                        <button type="submit"
+                                id="btn-add-procuracao"
+                                class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-medium px-5 py-2.5 rounded-lg transition-all duration-200 shadow-lg shadow-amber-500/20 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Registrar Procuração
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        {% endif %}
+
+</div>
+{% endblock %}
