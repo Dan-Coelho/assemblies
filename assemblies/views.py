@@ -55,7 +55,7 @@ class AssemblyDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'assembly'
 
     def get_context_data(self, **kwargs) -> dict:
-        """Injeta convocações, credenciais, procurações e membros da org no contexto."""
+        """Injeta convocações, credenciais, procurações, membros e itens de pauta no contexto."""
         context = super().get_context_data(**kwargs)
         assembly = self.object
         context['convocations'] = assembly.convocations.order_by('-sent_at')
@@ -67,7 +67,17 @@ class AssemblyDetailView(LoginRequiredMixin, DetailView):
         org_members = Member.objects.filter(organization=assembly.organization).order_by('name')
         context['proxy_members'] = org_members
         context['credential_members'] = org_members.exclude(status=MemberStatus.INADIMPLENTE)
+
+        # Itens de pauta com suas opções de voto pré-carregadas
+        from votings.models import AgendaItem
+        from votings.forms import AgendaItemForm, VoteOptionFormSet
+        context['agenda_items'] = (
+            assembly.agenda_items.prefetch_related('vote_options').order_by('order_index')
+        )
+        context['agenda_item_form'] = AgendaItemForm()
+        context['vote_option_formset'] = VoteOptionFormSet()
         return context
+
 
 
 class AssemblyUpdateView(LoginRequiredMixin, UpdateView):

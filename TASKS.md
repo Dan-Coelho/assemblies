@@ -239,48 +239,48 @@
 **Objetivo:** Sistema de votação completo com integridade e suporte a votação secreta.
 
 #### 27. Model AgendaItem
-- [ ] 27.1 Criar `voting/models.py` com classe `AgendaItem`
-- [ ] 27.2 Implementar `QuorumType`, `VoteMode` e `Status` como `TextChoices`
-- [ ] 27.3 Adicionar campos e `UniqueConstraint` de `order_index`
-- [ ] 27.4 Implementar `clean()` para proteger ordem durante assembleia aberta
-- [ ] 27.5 Implementar `is_secret`, `total_votes`, `get_result()`, `check_quorum_reached()`
-- [ ] 27.6 Adicionar docstring, type hints, `__str__` e migrations
+- [x] 27.1 Criar `voting/models.py` com classe `AgendaItem`
+- [x] 27.2 Implementar `QuorumType`, `VoteMode` e `Status` como `TextChoices`
+- [x] 27.3 Adicionar campos e `UniqueConstraint` de `order_index`
+- [x] 27.4 Implementar `clean()` para proteger ordem durante assembleia aberta
+- [x] 27.5 Implementar `is_secret`, `total_votes`, `get_result()`, `check_quorum_reached()`
+- [x] 27.6 Adicionar docstring, type hints, `__str__` e migrations
 
 #### 28. Model Vote
-- [ ] 28.1 Adicionar classe `Vote` em `voting/models.py`
-- [ ] 28.2 Adicionar campos: `agenda_item`, `label`, `total_count`
-- [ ] 28.3 Implementar método `increment()` com `F()` expression (atômico)
-- [ ] 28.4 Adicionar `UniqueConstraint` de label por item
-- [ ] 28.5 Criar migrations
+- [x] 28.1 Adicionar classe `Vote` em `voting/models.py`
+- [x] 28.2 Adicionar campos: `agenda_item`, `label`, `total_count`
+- [x] 28.3 Implementar método `increment()` com `F()` expression (atômico)
+- [x] 28.4 Adicionar `UniqueConstraint` de label por item
+- [x] 28.5 Criar migrations
 
 #### 29. Model VoteRecord
-- [ ] 29.1 Adicionar classe `VoteRecord` em `voting/models.py`
-- [ ] 29.2 Adicionar todos os campos com FKs e campos de hash
-- [ ] 29.3 Implementar `_compute_integrity_hash()`, `_compute_member_hash()`, `_compute_vote_hash()`
-- [ ] 29.4 Implementar `clean()` com todas as validações de negócio
-- [ ] 29.5 Implementar `save()` com lógica de voto secreto e integridade
-- [ ] 29.6 Implementar `delete()` bloqueado
-- [ ] 29.7 Implementar `verify_integrity()` para auditoria
-- [ ] 29.8 Adicionar `UniqueConstraints` para duplo voto (aberto e secreto)
-- [ ] 29.9 Criar migrations
+- [x] 29.1 Adicionar classe `VoteRecord` em `voting/models.py`
+- [x] 29.2 Adicionar todos os campos com FKs e campos de hash
+- [x] 29.3 Implementar `_compute_integrity_hash()`, `_compute_member_hash()`, `_compute_vote_hash()`
+- [x] 29.4 Implementar `clean()` com todas as validações de negócio
+- [x] 29.5 Implementar `save()` com lógica de voto secreto e integridade
+- [x] 29.6 Implementar `delete()` bloqueado
+- [x] 29.7 Implementar `verify_integrity()` para auditoria
+- [x] 29.8 Adicionar `UniqueConstraints` para duplo voto (aberto e secreto)
+- [x] 29.9 Criar migrations
 
 #### 30. CRUD de AgendaItem
-- [ ] 30.1 Criar `voting/forms.py` com `AgendaItemForm` e `VoteOptionFormSet`
-- [ ] 30.2 Criar `voting/views.py` com:
-  - [ ] 30.2.1 `AgendaItemCreateView`
-  - [ ] 30.2.2 `AgendaItemUpdateView`
-  - [ ] 30.2.3 `AgendaItemOpenView` (muda status para `open`)
-  - [ ] 30.2.4 `AgendaItemCloseView` (muda status para `closed`)
-- [ ] 30.3 Templates inline na aba de pauta do `detail.html` da assembleia
-- [ ] 30.4 Exibir resultado em tempo real ao fechar o item
+- [x] 30.1 Criar `voting/forms.py` com `AgendaItemForm` e `VoteOptionFormSet`
+- [x] 30.2 Criar `voting/views.py` com:
+  - [x] 30.2.1 `AgendaItemCreateView`
+  - [x] 30.2.2 `AgendaItemUpdateView`
+  - [x] 30.2.3 `AgendaItemOpenView` (muda status para `open`)
+  - [x] 30.2.4 `AgendaItemCloseView` (muda status para `closed`)
+- [x] 30.3 Templates inline na aba de pauta do `detail.html` da assembleia
+- [x] 30.4 Exibir resultado em tempo real ao fechar o item
 
 #### 31. Registro de Voto
-- [ ] 31.1 Criar `VoteForm` em `voting/forms.py`
-- [ ] 31.2 Criar `CastVoteView` em `voting/views.py`
-- [ ] 31.3 Chamar `full_clean()` antes do `save()` para acionar `clean()`
-- [ ] 31.4 Template de votação com opções renderizadas como botões/radio
-- [ ] 31.5 Exibir confirmação de voto registrado
-- [ ] 31.6 Exibir placar parcial (apenas contagens) durante votação aberta
+- [x] 31.1 Criar `VoteForm` em `voting/forms.py`
+- [x] 31.2 Criar `CastVoteView` em `voting/views.py`
+- [x] 31.3 Chamar `full_clean()` antes do `save()` para acionar `clean()`
+- [x] 31.4 Template de votação com opções renderizadas como botões/radio
+- [x] 31.5 Exibir confirmação de voto registrado
+- [x] 31.6 Exibir placar parcial (apenas contagens) durante votação aberta
 
 ---
 
