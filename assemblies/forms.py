@@ -1,6 +1,7 @@
 from django import forms
 
 from .models import Assembly, Convocation, Credential, Proxy
+from organizations.models import Organization
 
 
 class AssemblyForm(forms.ModelForm):
@@ -9,6 +10,7 @@ class AssemblyForm(forms.ModelForm):
     class Meta:
         model = Assembly
         fields = [
+            'organization',
             'title',
             'description',
             'status',
@@ -19,6 +21,7 @@ class AssemblyForm(forms.ModelForm):
             'meeting_url',
         ]
         labels = {
+            'organization': 'Organização',
             'title': 'Título',
             'description': 'Descrição',
             'status': 'Status',
@@ -41,6 +44,9 @@ class AssemblyForm(forms.ModelForm):
         # Format the initial value for the datetime-local input
         if self.instance and self.instance.scheduled_at:
             self.initial['scheduled_at'] = self.instance.scheduled_at.strftime('%Y-%m-%dT%H:%M')
+        # Ensure empty label is set for the organization select
+        self.fields['organization'].empty_label = 'Selecione a organização'
+        self.fields['organization'].queryset = Organization.objects.order_by('name')
 
 
 class ConvocationForm(forms.ModelForm):

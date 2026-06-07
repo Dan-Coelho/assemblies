@@ -51,6 +51,26 @@
             <div class="space-y-5">
                 <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Informações básicas</h3>
 
+                <!-- Organização -->
+                <div class="space-y-1.5">
+                    <label for="{{ form.organization.id_for_label }}" class="block text-sm font-medium text-slate-300">
+                        Organização <span class="text-red-400">*</span>
+                    </label>
+                    <select id="{{ form.organization.id_for_label }}"
+                            name="{{ form.organization.html_name }}"
+                            class="w-full bg-[#0F0F1A] border {% if form.organization.errors %}border-red-500/50{% else %}border-[#2A2A45]{% endif %} rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors text-sm appearance-none cursor-pointer">
+                        <option value="">Selecione a organização</option>
+                        {% for org in form.organization.field.queryset %}
+                        <option value="{{ org.pk }}" {% if form.organization.value == org.pk|stringformat:'s' %}selected{% endif %}>
+                            {{ org.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.organization.errors %}
+                    <p class="text-xs text-red-400">{{ form.organization.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+
                 <!-- Título -->
                 <div class="space-y-1.5">
                     <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-slate-300">

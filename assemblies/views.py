@@ -43,7 +43,7 @@ class AssemblyCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('assembly_list')
 
     def form_valid(self, form):
-        """Chama full_clean() para disparar as validações do model antes de salvar."""
+        """Salva a assembleia com a organização já definida pelo formulário."""
         return super().form_valid(form)
 
 
@@ -135,12 +135,17 @@ class AssemblyCloseView(LoginRequiredMixin, View):
 
     Validation: only assemblies with status ``open`` can be closed.
     Records ``ended_at`` with the current timestamp.
+
+    After persisting the status change, automatically generates a draft
+    :class:`minutes.models.Minutes` document via
+    :func:`minutes.utils.generate_minutes_content` if one does not yet
+    exist for this assembly.
     """
 
     http_method_names = ['post']
 
     def post(self, request, pk):
-        """Handle the close action, validate status and persist the transition."""
+        """Handle the close action, validate status, persist the transition and generate minutes."""
         assembly: Assembly = get_object_or_404(Assembly, pk=pk)
 
         if assembly.status != Assembly.Status.OPEN:
@@ -156,11 +161,47 @@ class AssemblyCloseView(LoginRequiredMixin, View):
         assembly.ended_at = timezone.now()
         assembly.save(update_fields=['status', 'ended_at', 'updated_at'])
 
+        # ── Auto-generate minutes draft (task 34.3) ───────────────────────────
+        self._generate_minutes(assembly)
+
         messages.success(
             request,
-            f'Assembleia "{assembly.title}" encerrada com sucesso.'
+            f'Assembleia "{assembly.title}" encerrada com sucesso. '
+            f'A ata foi gerada automaticamente em rascunho.'
         )
         return HttpResponseRedirect(reverse('assembly_detail', kwargs={'pk': pk}))
+
+    @staticmethod
+    def _generate_minutes(assembly: Assembly) -> None:
+        """
+        Create a draft :class:`minutes.models.Minutes` for the given assembly.
+
+        Calls :func:`minutes.utils.generate_minutes_content` to build the text
+        content, then persists a new ``Minutes`` record (status ``draft``) with
+        ``generated_at`` set to the current timestamp.
+
+        If a ``Minutes`` record already exists for this assembly (e.g. the
+        view is retried after a partial failure), the call is silently skipped
+        to avoid ``IntegrityError`` from the ``OneToOneField``.
+
+        Args:
+            assembly: The assembly whose minutes should be generated.
+        """
+        from minutes.models import Minutes
+        from minutes.utils import generate_minutes_content
+
+        # Guard: skip if minutes already exist for this assembly
+        if Minutes.objects.filter(assembly=assembly).exists():
+            return
+
+        content: str = generate_minutes_content(assembly)
+        Minutes.objects.create(
+            assembly=assembly,
+            organization=assembly.organization,
+            content=content,
+            status=Minutes.Status.DRAFT,
+            generated_at=timezone.now(),
+        )
 
 
 # ── Convocation Views ──────────────────────────────────────────────────────

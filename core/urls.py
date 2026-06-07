@@ -29,4 +29,5 @@ urlpatterns = [
     path('', include('organizations.urls')),
     path('', include('assemblies.urls')),
     path('', include('votings.urls')),
+    path('', include('minutes.urls')),
 ]

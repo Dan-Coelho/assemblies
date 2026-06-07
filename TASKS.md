@@ -288,32 +288,32 @@
 **Objetivo:** Geração automática de ata e sistema de assinaturas.
 
 #### 32. Model Minutes
-- [ ] 32.1 Criar `minutes/models.py` com classe `Minutes` herdando de `TenantModel`
-- [ ] 32.2 Adicionar campos: `assembly`, `content`, `status`, `document_url`, `generated_at`, `approved_at`
-- [ ] 32.3 Implementar `save()` bloqueado para edição após aprovação
-- [ ] 32.4 Adicionar docstring, type hints e migrations
+- [x] 32.1 Criar `minutes/models.py` com classe `Minutes` herdando de `TenantModel`
+- [x] 32.2 Adicionar campos: `assembly`, `content`, `status`, `document_url`, `generated_at`, `approved_at`
+- [x] 32.3 Implementar `save()` bloqueado para edição após aprovação
+- [x] 32.4 Adicionar docstring, type hints e migrations
 
 #### 33. Model MinuteSignature
-- [ ] 33.1 Adicionar classe `MinuteSignature` em `minutes/models.py`
-- [ ] 33.2 Adicionar campos: `minutes`, `member`, `role`, `signature_token`, `signed_at`
-- [ ] 33.3 Gerar `signature_token` automaticamente no `save()`
-- [ ] 33.4 Criar migrations
+- [x] 33.1 Adicionar classe `MinuteSignature` em `minutes/models.py`
+- [x] 33.2 Adicionar campos: `minutes`, `member`, `role`, `signature_token`, `signed_at`
+- [x] 33.3 Gerar `signature_token` automaticamente no `save()`
+- [x] 33.4 Criar migrations
 
 #### 34. Geração automática da ata
-- [ ] 34.1 Criar função `generate_minutes_content(assembly)` em `minutes/utils.py`
-- [ ] 34.2 Montar texto da ata com: cabeçalho, quórum, itens votados, resultados e deliberações
-- [ ] 34.3 Chamar a função automaticamente ao executar `AssemblyCloseView`
-- [ ] 34.4 Adicionar type hints e docstring na função
+- [x] 34.1 Criar função `generate_minutes_content(assembly)` em `minutes/utils.py`
+- [x] 34.2 Montar texto da ata com: cabeçalho, quórum, itens votados, resultados e deliberações
+- [x] 34.3 Chamar a função automaticamente ao executar `AssemblyCloseView`
+- [x] 34.4 Adicionar type hints e docstring na função
 
 #### 35. Views de Ata
-- [ ] 35.1 Criar `minutes/views.py` com:
-  - [ ] 35.1.1 `MinutesDetailView` — exibe o conteúdo da ata
-  - [ ] 35.1.2 `MinutesApproveView` — muda status para `approved`
-  - [ ] 35.1.3 `MinutesSignView` — registra assinatura de um membro
-- [ ] 35.2 Criar templates:
-  - [ ] 35.2.1 `minutes/detail.html` — texto da ata + lista de assinaturas + botão de assinar
-  - [ ] 35.2.2 Indicação visual de ata aprovada (badge + bloqueio de edição)
-- [ ] 35.3 Criar `minutes/urls.py` e registrar em `config/urls.py`
+- [x] 35.1 Criar `minutes/views.py` com:
+  - [x] 35.1.1 `MinutesDetailView` — exibe o conteúdo da ata
+  - [x] 35.1.2 `MinutesApproveView` — muda status para `approved`
+  - [x] 35.1.3 `MinutesSignView` — registra assinatura de um membro
+- [x] 35.2 Criar templates:
+  - [x] 35.2.1 `minutes/detail.html` — texto da ata + lista de assinaturas + botão de assinar
+  - [x] 35.2.2 Indicação visual de ata aprovada (badge + bloqueio de edição)
+- [x] 35.3 Criar `minutes/urls.py` e registrar em `config/urls.py`
 
 ---
 
